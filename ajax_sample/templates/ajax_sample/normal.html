@@ -1,31 +1,38 @@
+{% load i18n %}
+{% load staticfiles %}
 
-<!DOCTYPE html>
 <html>
 	<head>
     	<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
         <script type="text/javascript" charset="UTF-8" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-        <script type="text/javascript" charset="UTF-8" src="/static/js/djangoajax.js"></script>
+        <script type="text/javascript" charset="UTF-8" src='{% static "js/djangoajax.js" %}'></script>
 
         <script type="text/javascript">
 
         function callback(data, status) {
-        $("#echoResult").text("status:"+status+" data:"+data);
+					if(status=="success") {
+							$("#echoResult").html(data);
+					}else{
+							$("#echoResult").text("Server Error.");
+					}
         }
 
         function sends() {
-            $.post('/ajax_sample/input/',{"echo": $("#echo").val()},callback,"html");
+            $.post('{% url "ajax_ample_ajax" %}',{"echo": $("#echo").val()},callback,"html");
         }
 
         </script>
 
 	</head>
 	<body>
-        Result <br><div id="echoResult"></div><br><br>
+			  {% trans "This is an ajax sample for django." %}<br>
+				{% trans "Written text in form will be appeared at Result." %}<br>
         <form action="#" method="post">
             {% csrf_token %}
             <input type="text" name="echo" id="echo" />
             <input type="button" value="submit" onclick="sends()" />
-        </form>
+        </form><br><br>
+				{% trans "Result" %}<br> <div id="echoResult"></div><br><br>
 
 	</body>
 </html>
